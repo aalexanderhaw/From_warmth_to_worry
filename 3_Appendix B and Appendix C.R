@@ -34,6 +34,8 @@ data_long <- data_long_orig %>%
   # whether room temperature is under 18°C, i.e., actually unsafe
   mutate(room_temp_unsafe=ifelse(room_temp>18,0,1))
 
+
+
 # Adding data for heated degree days
 nrg_data <- readxl::read_xlsx("data/External data sources/nrg_chddr2_a_page_spreadsheet.xlsx", sheet="Sheet 1")
 
@@ -89,7 +91,6 @@ dep_vars <- c("diff_pp_area", "diff_room_temp", "diff_shower_freq", "diff_worry_
 countries <- c("Denmark", "France", "Germany", "Italy", "Latvia")
 
 
-
 # empty list to store model results
 lm_result <- list()
 # numbering the first results
@@ -139,7 +140,7 @@ for (dep_var in dep_vars) {
   }
   
   # Estimating models for each outcome variable for the pooled sample
-  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV, se_type = "HC3", data = data_sub))$coefficients)
+  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV,clusters = country, se_type = "stata", data = data_sub))$coefficients)
   
   # Adding the country and outcome variable
   lm_result[[i]]<-lm_result[[i]]%>%
@@ -149,7 +150,7 @@ for (dep_var in dep_vars) {
   # Adding variable names
   lm_result[[i]]$var <- rownames(lm_result[[i]])
   # Adding number of cases
-  lm_result[[i]]$N <- nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV, se_type = "HC3", data = data_sub))
+  lm_result[[i]]$N <- nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV,clusters = country, se_type = "stata", data = data_sub))
   i <- i + 1
 }
 
@@ -204,14 +205,14 @@ for (dep_var in dep_vars) {
   }
   
   
-  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV+district+oil+elec+wood+other, se_type = "HC3", data = data_sub))$coefficients)
+  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV+district+oil+elec+wood+other,clusters = country, se_type = "stata", data = data_sub))$coefficients)
   
   lm_result[[i]]<-lm_result[[i]]%>%
     mutate(country="Pooled sample")%>%
     mutate(depvar=dep_var)
   
   lm_result[[i]]$var <- rownames(lm_result[[i]])
-  lm_result[[i]]$N <- nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV+district+oil+elec+wood+other, se_type = "HC3", data = data_sub))
+  lm_result[[i]]$N <- nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV+district+oil+elec+wood+other, clusters = country, se_type = "stata", data = data_sub))
   i <- i + 1
 }
 
@@ -268,14 +269,14 @@ for (dep_var in c("diff_room_temp")) {
   }
   
   
-  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+thermostat+DK+FR+IT+LV, se_type = "HC3", data = data_sub))$coefficients)
+  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+thermostat+DK+FR+IT+LV,clusters = country, se_type = "stata", data = data_sub))$coefficients)
   
   lm_result[[i]]<-lm_result[[i]]%>%
     mutate(country="Pooled sample")%>%
     mutate(depvar=dep_var)
   
   lm_result[[i]]$var <- rownames(lm_result[[i]])
-  lm_result[[i]]$N<-nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+ thermostat+DK+FR+IT+LV, se_type = "HC3", data = data_sub))
+  lm_result[[i]]$N<-nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+ thermostat+DK+FR+IT+LV,clusters = country, se_type = "stata", data = data_sub))
   i <- i + 1
 }
 
@@ -334,14 +335,14 @@ for (dep_var in c("diff_cold_dum")) {
   }
   
   
-  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+room_temp_unsafe+room_temp+pp_area+DK+FR+IT+LV, se_type = "HC3", data = data_sub))$coefficients)
+  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+room_temp_unsafe+room_temp+pp_area+DK+FR+IT+LV,clusters = country, se_type = "stata", data = data_sub))$coefficients)
   
   lm_result[[i]]<-lm_result[[i]]%>%
     mutate(country="Pooled sample")%>%
     mutate(depvar=dep_var)
   
   lm_result[[i]]$var <- rownames(lm_result[[i]])
-  lm_result[[i]]$N<-nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+room_temp_unsafe+room_temp+pp_area+DK+FR+IT+LV, se_type = "HC3", data = data_sub))
+  lm_result[[i]]$N<-nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+room_temp_unsafe+room_temp+pp_area+DK+FR+IT+LV,clusters = country, se_type = "stata", data = data_sub))
   i <- i + 1
 }
 
@@ -402,14 +403,14 @@ for (dep_var in dep_vars) {
    data_sub <- within(data_sub, Region_nominal <- relevel(as.factor(Region_nominal), ref = "Capital Region of Denmark"))
 
 
-  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+ factor(Region_nominal), se_type = "HC3", data = data_sub))$coefficients)
+  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+ factor(Region_nominal), clusters = country, se_type = "stata", data = data_sub))$coefficients)
 
   lm_result[[i]]<-lm_result[[i]]%>%
     mutate(country="Pooled sample")%>%
     mutate(depvar=dep_var)
 
   lm_result[[i]]$var <- rownames(lm_result[[i]])
-  lm_result[[i]]$N<-nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV+  factor(Region_nominal), se_type = "HC3", data = data_sub))
+  lm_result[[i]]$N<-nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV+  factor(Region_nominal), clusters = country, se_type = "stata", data = data_sub))
   i <- i + 1
 }
 
@@ -488,14 +489,14 @@ for (dep_var in dep_vars) {
   }
   
   
-  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+HDD+DK+FR+IT+LV, se_type = "HC3", data = data_sub))$coefficients)
+  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+HDD+DK+FR+IT+LV,clusters = country, se_type = "stata", data = data_sub))$coefficients)
   
   lm_result[[i]]<-lm_result[[i]]%>%
     mutate(country="Pooled sample")%>%
     mutate(depvar=dep_var)
   
   lm_result[[i]]$var <- rownames(lm_result[[i]])
-  lm_result[[i]]$N<-nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+HDD+DK+FR+IT+LV, se_type = "HC3", data = data_sub))
+  lm_result[[i]]$N<-nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+HDD+DK+FR+IT+LV,clusters = country, se_type = "stata", data = data_sub))
   i <- i + 1
 }
 

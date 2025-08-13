@@ -6,10 +6,10 @@ library(readxl)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(estimatr)
 
 
 data_long<- read.csv("data/clean_data.csv")
-
 
 
 ## Section 2.1: Estimating the OLS models ----
@@ -67,7 +67,7 @@ for (dep_var in dep_vars) {
   }
   
   # Estimating models for each outcome variable for the pooled sample
-  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV, se_type = "HC3", data = data_sub))$coefficients)
+  lm_result[[i]] <- as.data.frame(summary(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV,clusters = country, se_type = "stata", data = data_sub))$coefficients)
   
   # Adding the country and outcome variable
   lm_result[[i]]<-lm_result[[i]]%>%
@@ -77,7 +77,7 @@ for (dep_var in dep_vars) {
   # Adding variable names
   lm_result[[i]]$var <- rownames(lm_result[[i]])
   # Adding number of cases
-  lm_result[[i]]$N <- nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV, se_type = "HC3", data = data_sub))
+  lm_result[[i]]$N <- nobs(lm_robust(depvar~ big_price_incr+ female+ Age+ income_pp_1000+ high_educ+ sfh+owner+city+DK+FR+IT+LV,clusters = country, se_type = "stata", data = data_sub))
   i <- i + 1
 }
 
