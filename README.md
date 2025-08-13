@@ -1,6 +1,6 @@
 # From warmth to worry
 
-This repository contains the data and R code required to reproduce the results presented in the manuscript titled "From warmth to worry: Heating behaviours and energy deprivation during the 2022 energy crisis". The paper has been submitted to Energy Policy on 25 June 2025.
+This repository contains the data and R code required to reproduce the results presented in the manuscript titled "From warmth to worry: Heating behaviours and energy deprivation during the 2022 energy crisis". The paper has been submitted to Energy and Buildings on 13 August 2025.
 
 This research benefitted from funding by the European Union's Horizon 2020 Framework Programme under the project <a href="fulfill-sufficiency.eu">FULFILL</a> - Fundamental decarbonisation through sufficiency by lifestyle changes  (Grant agreement ID 101003656).
 
